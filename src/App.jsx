@@ -1,15 +1,41 @@
 import "./App.css";
-import { useState } from "react";
+
+import axios from 'axios';
+import React, {useState,useEffect} from 'react'
 import Book from "./Book";
-import TestingAPI from "./TestingAPI";
+
+
+const API = "https://reactnd-books-api.udacity.com/books";
+
+
+
 
 function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
+  const [books,setBooks] = useState([]);
+
+  useEffect(() => {
+    axios.get(API, { headers: { 'Authorization': 'Eren Yeager' }}).then((response) => {
+
+        setBooks(response.data.books);
+    })
+}, [])
+  console.log(books);
+  const currentlyReadingBooks = books.filter((book) => book.shelf === 'currentlyReading');
+  const wantsToReadBooks = books.filter((book) => book.shelf ==='wantToRead');
+  const readBooks = books.filter((book) => book.shelf ==='read');
+
+
+  // {books && books.map((book) => {
+  //   return <Book />
+  // })}
+ 
+
 
   return (
 
     <div className="app">
-          <TestingAPI />
+      
       {
       showSearchPage ? ( 
       <div className="search-books">
@@ -23,6 +49,7 @@ function App() {
             <ol className="books-grid"></ol>
           </div>
         </div>
+        // Books Start
       ) : (
         <div className="list-books">
           <div className="list-books-title">
@@ -36,7 +63,11 @@ function App() {
                 <h2 className="bookshelf-title">Currently Reading</h2>
                 <div className="bookshelf-books">
                   <ol className="books-grid">
-                    < Book />
+                    {/* < Book /> */}
+                    {currentlyReadingBooks && currentlyReadingBooks.map((book) => {
+                      console.log(book)
+                      return <Book title={book.title} authors={book.authors} backgroundImage={book.imageLinks.thumbnail} key={book.id}/>
+                    })}
                     {/* <li>
                       <div className="book">
                         <div className="book-top">
@@ -65,7 +96,7 @@ function App() {
                       </div>
                     </li> */}
 
-                    <li>
+                    {/* <li>
                       <div className="book">
                         <div className="book-top">
                           <div
@@ -94,7 +125,7 @@ function App() {
                         <div className="book-title">Ender's Game</div>
                         <div className="book-authors">Orson Scott Card</div>
                       </div>
-                    </li>
+                    </li> */}
                   </ol>
                 </div>
               </div>
