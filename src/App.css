@@ -143,6 +143,12 @@ body,
   align-items: flex-end;
 }
 
+.book-cover {
+  width: 128px;
+  height: 193px;
+  
+}
+
 .book-shelf-changer {
   position: absolute;
   right: 0;
