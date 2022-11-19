@@ -1,10 +1,8 @@
 import React, {  useEffect, useState } from "react";
-
-
-
 export default function ShelfChanger(props) {
   const [bookShelf, setBookShelf] = useState("");
 
+  // Use useEffect hook to make sure this function call will be executed after the state is updated
   useEffect(() => {
     props.changeShelf(props.book, bookShelf)
   }, [bookShelf])
