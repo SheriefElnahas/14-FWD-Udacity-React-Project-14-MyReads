@@ -1,18 +1,66 @@
-const API = "https://reactnd-books-api.udacity.com/books";
+import React, { useEffect, useState } from "react";
 
-import axios from 'axios';
-import React, {useState,useEffect} from 'react'
+export default function ShelfChanger(props) {
 
-export default function TestingAPI() {
-    const [books,setBooks] = useState('');
+  const [selectOptions, setSelectOptions] = useState({option : ''});
 
-    useEffect(() => {
-        axios.get(API, { headers: { 'Authorization': 'Eren Yeager' }}).then((response) => {
-            console.log(response.data);
-            setBooks(response.data);
-        })
-    }, [])
+  
+  function handleChange(e) {
+
+    
+    // Change the element to controled element
+
+    setSelectOptions({option: e.target.value});
+
+    // Extract the options array & the selected option index
+    const options = e.target.options;
+    const index = options.selectedIndex;
+
+    // Loop through the options and remove the check mark - then add the check mark only on the selected option
+    for (let i = 0; i < options.length; i++) {
+      options[i].textContent = options[i].textContent.replace("✔️", "");
+    }
+    options[index].textContent += "✔️";
+
+  }
+
+  props.changeShelf(props.book, selectOptions.option)
+
+
+
+
+  const optionsArr = [
+    {value: 'currentlyReading', text: 'Currently Reading'},
+    {value: 'wantToRead', text: 'Want To Read'},
+    {value: 'read', text: 'Read'},
+    {value: 'none', text: 'none'},
+   ];
+
+
   return (
-    <div>TestingAPI</div>
-  )
+    <div>
+
+      <div className="book-shelf-changer">
+        <select value={selectOptions.option} onChange={handleChange} name={selectOptions.option}  >
+          {/* <option value="none" disabled>
+            Move to...
+          </option> */}
+          {optionsArr.map((option ) => {
+
+            if(option.value === props.shelf) {
+              option.text += '✔️';
+            }
+            return <option key={option.value} value={option.value}>{option.text} </option>
+          })}
+          {/* <option value="currentlyReading" >Currently Reading</option>
+          <option value="wantToRead">Want to Read</option>
+          <option value="read">Read</option>
+          <option value="none">None</option> */}
+        </select>
+      </div>
+   
+    </div>
+  );
 }
+
+

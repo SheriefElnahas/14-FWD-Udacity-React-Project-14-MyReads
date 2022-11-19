@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 
-export default function ShelfChanger() {
-  const [option, setOption] = useState("");
 
-  function handleChange(event) {
+
+export default function ShelfChanger(props) {
+  const [bookShelf, setBookShelf] = useState("");
+
+  useEffect(() => {
+    props.changeShelf(props.book, bookShelf)
+  }, [bookShelf])
+  function handleChange(e) {
+
+
     // Change the element to controled element
-    setOption(event.target.value);
+    setBookShelf(e.target.value);
+    console.log(bookShelf)
+
 
     // Extract the options array & the selected option index
-    const options = event.target.options;
+    const options = e.target.options;
     const index = options.selectedIndex;
 
     // Loop through the options and remove the check mark - then add the check mark only on the selected option
@@ -17,17 +26,34 @@ export default function ShelfChanger() {
     }
     options[index].textContent += "✔️";
   }
+
+  const optionsArr = [
+    { value: "", text: "Move To...", disabled: true },
+    { value: "currentlyReading", text: "Currently Reading" },
+    { value: "wantToRead", text: "Want To Read" },
+    { value: "read", text: "Read" },
+    { value: "none", text: "none" },
+  ];
+
   return (
     <div>
       <div className="book-shelf-changer">
-        <select value={option} onChange={handleChange}>
-          <option value="none" disabled>
-            Move to...
-          </option>
-          <option value="currentlyReading">Currently Reading</option>
+        <select value={bookShelf} onChange={handleChange}  >
+
+          {optionsArr.map((option) => {
+            if (option.value === props.shelf) {
+              option.text += "✔️";
+            }
+            return (
+              <option key={option.value} value={option.value} disabled={option.disabled}>
+                {option.text}{" "}
+              </option>
+            );
+          })}
+          {/* <option value="currentlyReading" >Currently Reading</option>
           <option value="wantToRead">Want to Read</option>
           <option value="read">Read</option>
-          <option value="none">None</option>
+          <option value="none">None</option> */}
         </select>
       </div>
     </div>

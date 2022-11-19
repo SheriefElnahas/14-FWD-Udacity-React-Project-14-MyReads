@@ -14,6 +14,7 @@ function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
   const [books,setBooks] = useState([]);
 
+
   useEffect(() => {
     axios.get(API, { headers: { 'Authorization': 'Eren Yeager' }}).then((response) => {
 
@@ -21,16 +22,38 @@ function App() {
     })
 }, [])
 
-  const currentlyReadingBooks = books.filter((book) => book.shelf === 'currentlyReading');
-  const wantsToReadBooks = books.filter((book) => book.shelf ==='wantToRead');
-  const readBooks = books.filter((book) => book.shelf ==='read');
+  // const currentlyReadingBooks = books.filter((book) => book.shelf === 'currentlyReading');
+  // const wantsToReadBooks = books.filter((book) => book.shelf ==='wantToRead');
+  // const readBooks = books.filter((book) => book.shelf ==='read');
 
 
+  const booksObj = {
+    currentlyReading : books.filter((book) => book.shelf === 'currentlyReading'),
+    wantToRead : books.filter((book) => book.shelf ==='wantToRead'),
+    read : books.filter((book) => book.shelf ==='read')
+  }
+
+
+  function changeShelf(book, moveTo) {
+
+    if(moveTo) {
+      const modifiedBooks = books.map((singleBook) => {
+        if(singleBook.title === book.title) {
+
+          book.shelf = moveTo;
+          return book;
+        }
+        return singleBook;
+      })
+      setBooks(modifiedBooks);
+
+    }
+  }
 
   return (
 
     <div className="app">
-      
+   
       {
       showSearchPage ? ( 
       <div className="search-books">
@@ -61,8 +84,10 @@ function App() {
                 <div className="bookshelf-books">
 
                   <ol className="books-grid">
-                    {currentlyReadingBooks && currentlyReadingBooks.map((book) => {
-                      return <Book title={book.title} authors={book.authors} backgroundImage={book.imageLinks.thumbnail} key={book.id}/>
+                    {/* {booksObj.currentlyReading && booksObj.currentlyReading.map((book) => { */}
+                   {booksObj.currentlyReading && books.filter((book) => book.shelf === 'currentlyReading').map((book) => {
+                      return <Book  changeShelf={changeShelf} book={book}
+                key={book.id}/>
                     })}
                   </ol>
                 </div>
@@ -75,8 +100,9 @@ function App() {
                 <div className="bookshelf-books">
                   <ol className="books-grid">
 
-                    {wantsToReadBooks && wantsToReadBooks.map((book) => {
-                      return  <Book title={book.title} authors={book.authors} backgroundImage={book.imageLinks.thumbnail} key={book.id}/>
+                    {booksObj.wantToRead && booksObj.wantToRead.map((book) => {
+                      return <Book title={book.title} shelf={book.shelf} authors={book.authors} changeShelf={changeShelf} book={book}
+                      backgroundImage={book.imageLinks.thumbnail} key={book.id}/>
                     })}
                   </ol>
                 </div>
@@ -87,11 +113,11 @@ function App() {
               <div className="bookshelf">
                 <h2 className="bookshelf-title">Read</h2>
                 <div className="bookshelf-books">
-                  
+
                   <ol className="books-grid">
-                    {readBooks && readBooks.map((book) => {
-                        return  <Book title={book.title} authors={book.authors} backgroundImage={book.imageLinks.thumbnail} key={book.id}/>
-                    })}
+                    {booksObj.read && booksObj.read.map((book) => {
+                      return <Book title={book.title} shelf={book.shelf} authors={book.authors} changeShelf={changeShelf} book={book}
+                      backgroundImage={book.imageLinks.thumbnail} key={book.id}/>                    })}
 
                   </ol>
                 </div>
