@@ -90,6 +90,18 @@ body,
   cursor: pointer;
   border:none;
 }
+
+.search-error {
+  background:rgb(184, 84, 95);
+  text-align: center;
+  font-size:16px;
+  font-weight: bold;
+  position: fixed;
+  top:50px;
+  width:100%;
+  left:0;
+  color:#fff;
+}
 .search-btn:hover {
   background:teal;
 }

@@ -4,56 +4,54 @@ import { Link } from "react-router-dom";
 import Book from "./Book";
 
 
+import { search } from "./BooksAPI";
 
-import {search} from './BooksAPI';
-
-
-function changeShelf(book, moveTo) {
-  if (moveTo) {
-    const modifiedBooks = books.map((singleBook) => {
-      if (singleBook.title === book.title) {
-        book.shelf = moveTo;
-        return book;
-      }
-      return singleBook;
-    });
-    setBooks(modifiedBooks);
-  }
-}
-
-
-
-export default function SearchPage() {
+export default function SearchPage(props) {
   const [searchedBooks, setSearchedBooks] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [error, setError] = useState("");
 
-    function handleSubmit(e) {
-      e.preventDefault();
-      search(searchInput).then((response) => {
-       
-        setSearchedBooks(response);
-      })
+  async function handleSubmit(e) {
+    setError("");
+    e.preventDefault();
+    try {
+      const result =  await search(searchInput);
+
+      // console.log(result);
+      if(result.error) {
+        throw new Error(result.error);
+      }
+      setSearchedBooks(result);
+    } catch(err) {
+      setError("There are no search results for this value")
+      setSearchInput("")
+
     }
 
+  }
 
   return (
-    <form onSubmit={handleSubmit}  className="search-books">
+    <form onSubmit={handleSubmit} className="search-books">
       <div className="search-books-bar">
         <Link className="close-search" to="/">Close</Link>
-
         <div className="search-books-input-wrapper">
-          <input type="text" placeholder="Search by title, author, or ISBN" onChange={(e) => setSearchInput(e.target.value)} value={searchInput} />
+          <input type="text"   placeholder="Search by title, author, or ISBN"  onChange={(e) => setSearchInput(e.target.value)}  value={searchInput}   />
           <button className="search-btn">Search</button>
+          <p className="search-error">{error} </p>
         </div>
       </div>
-
-      <div className="search-books-results">
+    {!error ?    <div className="search-books-results">
         <ol className="books-grid">
-        {searchedBooks && searchedBooks.map((book) => {
-           return <Book changeShelf={changeShelf}  book={book} key={book.id}  />
-        })}
+          {searchedBooks &&
+            searchedBooks.map((book) => {
+
+              return (
+                <Book changeShelf={props.changeShelf}  book={book} key={book.id} />
+              );
+            })}
         </ol>
-      </div>
+      </div> : error}
+   
     </form>
   );
 }

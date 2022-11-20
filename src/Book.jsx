@@ -1,6 +1,7 @@
 import React from "react";
 import ShelfChanger from "./ShelfChanger";
 export default function Book(props) {
+
   const bookStyle = {
     backgroundImage: `url("${props.book.imageLinks.thumbnail}")`,    
 }
@@ -16,10 +17,10 @@ export default function Book(props) {
               className="book-cover"
               style={bookStyle}
             ></div>
-         < ShelfChanger changeShelf={props.changeShelf} shelf={props.book.shelf} book={props.book} />
+         < ShelfChanger changeShelf={props.changeShelf} shelf={props.book.shelf} book={props.book}  />
           </div>
           <div className="book-title">{props.book.title}</div> 
-          <div className="book-authors">{props.book.authors.join(" ")}</div>
+          <div className="book-authors">{props.book.authors && props.book.authors.join(" ")}</div>
         </div>
       </li>
     </div>

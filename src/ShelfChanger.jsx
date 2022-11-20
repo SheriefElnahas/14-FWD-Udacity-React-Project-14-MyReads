@@ -1,17 +1,28 @@
 import React, {  useEffect, useState } from "react";
+
+
+
 export default function ShelfChanger(props) {
+
+  // console.log(props);
   const [bookShelf, setBookShelf] = useState("");
+
+
 
   // Use useEffect hook to make sure this function call will be executed after the state is updated
   useEffect(() => {
     props.changeShelf(props.book, bookShelf)
+
   }, [bookShelf])
+  
   function handleChange(e) {
 
 
     // Change the element to controled element
     setBookShelf(e.target.value);
-    console.log(bookShelf)
+  
+    // console.log(props.book)
+
 
 
     // Extract the options array & the selected option index

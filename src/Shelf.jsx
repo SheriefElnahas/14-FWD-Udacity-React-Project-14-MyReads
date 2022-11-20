@@ -10,7 +10,7 @@ export default function Shelf({shelfBooks, changeShelf, shelfTitle}) {
         <ol className="books-grid">
           { shelfBooks.map((book) => {
               return (
-                <Book changeShelf={changeShelf} book={book} key={book.id}  />
+                <Book changeShelf={changeShelf}   book={book} key={book.id}  />
               );
             })}
         </ol>
