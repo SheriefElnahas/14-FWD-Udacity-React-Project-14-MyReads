@@ -22,13 +22,21 @@ export default function SearchPage(props) {
         throw new Error(result.error);
       }
       setSearchedBooks(result);
+  
+
     } catch(err) {
       setError("There are no search results for this value")
       setSearchInput("")
 
     }
-
+   console.log(searchedBooks);
   }
+
+  useEffect(() => {
+   props.getSearchedBooks(searchedBooks);
+ 
+  }, [ searchedBooks])
+
 
   return (
     <form onSubmit={handleSubmit} className="search-books">
@@ -44,7 +52,7 @@ export default function SearchPage(props) {
         <ol className="books-grid">
           {searchedBooks &&
             searchedBooks.map((book) => {
-
+                
               return (
                 <Book changeShelf={props.changeShelf}  book={book} key={book.id} />
               );

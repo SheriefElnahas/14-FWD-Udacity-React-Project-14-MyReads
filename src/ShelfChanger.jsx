@@ -41,7 +41,7 @@ export default function ShelfChanger(props) {
     { value: "currentlyReading", text: "Currently Reading" },
     { value: "wantToRead", text: "Want To Read" },
     { value: "read", text: "Read" },
-    { value: "none", text: "none" },
+    { value: "none", text: "None" },
   ];
 
   return (
@@ -55,7 +55,7 @@ export default function ShelfChanger(props) {
             }
             return (
               <option key={option.value} value={option.value} disabled={option.disabled}>
-                {option.text}{" "}
+                {option.text}
               </option>
             );
           })}

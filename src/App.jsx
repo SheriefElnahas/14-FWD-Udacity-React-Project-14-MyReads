@@ -14,6 +14,7 @@ import { update, getAll } from "./BooksAPI";
 
 function App() {
   const [ initialBooks, setInitialBooks] = useState([]);
+  // const [bookFromSearch, setBooksFromSearch] = useState([]);
 
   useEffect(() => {
     getAll(API, { headers: { Authorization: "Sherief Elnahas" } }).then(
@@ -38,9 +39,27 @@ function App() {
       });
       setInitialBooks(modifiedBooks);
       console.log("from change shelf");
-      update(book,moveTo);
+      // update(book,moveTo);
     }
   }
+
+  function getSearchedBooks(searchedBooks, setSearchBooks) {
+    console.log(searchedBooks);
+    console.log(initialBooks);
+   const modifiedBooks=  searchedBooks.map((singleBook) => {
+      initialBooks.forEach((book) => {
+        if(book.title === singleBook.title) {
+          console.log(book.title, singleBook.title);
+          singleBook.shelf = book.shelf
+        }
+   
+      })
+      return singleBook;
+    })
+    console.log(modifiedBooks);
+    
+  }
+
 
 
 
@@ -48,7 +67,7 @@ function App() {
     <div className="app">
       <Routes>
         <Route  path="/"  element={<MyReads books={initialBooks} changeShelf={changeShelf}  />} />
-        <Route path="/search" element={<SearchPage changeShelf={changeShelf}  />} />
+        <Route path="/search" element={<SearchPage changeShelf={changeShelf}  getSearchedBooks={ getSearchedBooks} />} />
       </Routes>
       <div className="open-search">
         <Link to="/search">Add a book</Link>

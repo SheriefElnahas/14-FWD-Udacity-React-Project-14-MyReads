@@ -21,6 +21,7 @@ export default function Book(props) {
           </div>
           <div className="book-title">{props.book.title}</div> 
           <div className="book-authors">{props.book.authors && props.book.authors.join(" ")}</div>
+          {/* <div className="book-authors">{props.book.shelf ? props.book.shelf : 'none'}</div> */}
         </div>
       </li>
     </div>
