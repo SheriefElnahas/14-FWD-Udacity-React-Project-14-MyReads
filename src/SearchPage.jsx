@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 import Book from "./Book";
@@ -11,7 +11,7 @@ export default function SearchPage(props) {
   const [searchInput, setSearchInput] = useState("");
   const [error, setError] = useState("");
 
-  async function handleSubmit(e) {
+ async function handleSubmit(e) {
     setError("");
     e.preventDefault();
     try {
@@ -28,17 +28,27 @@ export default function SearchPage(props) {
       setError("There are no search results for this value")
       setSearchInput("")
 
+
+  
     }
-   console.log(searchedBooks);
+
+    // props.getSearchedBooks(searchedBooks);
+
   }
 
+
   useEffect(() => {
-   props.getSearchedBooks(searchedBooks);
+   const modifiedBooks = props.getSearchedBooks(searchedBooks);
+   console.log(modifiedBooks);
+  //  setSearchedBooks(modifiedBooks);
  
   }, [ searchedBooks])
 
 
   return (
+    <div className="SearchPage">
+
+
     <form onSubmit={handleSubmit} className="search-books">
       <div className="search-books-bar">
         <Link className="close-search" to="/">Close</Link>
@@ -61,5 +71,6 @@ export default function SearchPage(props) {
       </div> : error}
    
     </form>
+    </div>
   );
 }

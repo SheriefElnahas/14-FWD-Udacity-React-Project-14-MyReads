@@ -10,21 +10,22 @@ import SearchPage from "./SearchPage";
 const API = "https://reactnd-books-api.udacity.com/books";
 import { update, getAll } from "./BooksAPI";
 
-
-
 function App() {
   const [ initialBooks, setInitialBooks] = useState([]);
-  // const [bookFromSearch, setBooksFromSearch] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getAll(API, { headers: { Authorization: "Sherief Elnahas" } }).then(
+    const controller = new AbortController(); 
+    setIsLoading(true);
+    getAll(API, { headers: { Authorization: "Sherief Elnahas" } }, {signal: controller.signal}).then(
       (response) => {
         setInitialBooks(response);
+        setIsLoading(false);
       }
     );
 
     return () => {
-      console.log("clean up function");
+      controller.abort(); 
     };
   }, []);
 
@@ -43,10 +44,9 @@ function App() {
     }
   }
 
-  function getSearchedBooks(searchedBooks, setSearchBooks) {
-    console.log(searchedBooks);
-    console.log(initialBooks);
-   const modifiedBooks=  searchedBooks.map((singleBook) => {
+  function getSearchedBooks(searchedBooks) {
+
+   const modifiedBooks =  searchedBooks.map((singleBook) => {
       initialBooks.forEach((book) => {
         if(book.title === singleBook.title) {
           console.log(book.title, singleBook.title);
@@ -56,7 +56,7 @@ function App() {
       })
       return singleBook;
     })
-    console.log(modifiedBooks);
+    return modifiedBooks;
     
   }
 
@@ -65,10 +65,11 @@ function App() {
 
   return (
     <div className="app">
-      <Routes>
+      {isLoading ? <h1>Loading...</h1> :   <Routes>
         <Route  path="/"  element={<MyReads books={initialBooks} changeShelf={changeShelf}  />} />
         <Route path="/search" element={<SearchPage changeShelf={changeShelf}  getSearchedBooks={ getSearchedBooks} />} />
-      </Routes>
+      </Routes>}
+    
       <div className="open-search">
         <Link to="/search">Add a book</Link>
       </div>
