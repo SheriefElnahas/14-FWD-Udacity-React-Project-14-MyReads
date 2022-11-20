@@ -1,29 +1,19 @@
-import React, {  useEffect, useState } from "react";
-
-
+import React, { useEffect, useState } from "react";
 
 export default function ShelfChanger(props) {
-
   // console.log(props);
   const [bookShelf, setBookShelf] = useState("");
 
-
-
   // Use useEffect hook to make sure this function call will be executed after the state is updated
   useEffect(() => {
-    props.changeShelf(props.book, bookShelf)
+    props.changeShelf(props.book, bookShelf);
+  }, [bookShelf]);
 
-  }, [bookShelf])
-  
   function handleChange(e) {
-
-
     // Change the element to controled element
     setBookShelf(e.target.value);
-  
+
     // console.log(props.book)
-
-
 
     // Extract the options array & the selected option index
     const options = e.target.options;
@@ -47,22 +37,21 @@ export default function ShelfChanger(props) {
   return (
     <div>
       <div className="book-shelf-changer">
-        <select value={bookShelf} onChange={handleChange}  >
-
+        <select value={bookShelf} onChange={handleChange}>
           {optionsArr.map((option) => {
             if (option.value === props.shelf) {
               option.text += "✔️";
             }
             return (
-              <option key={option.value} value={option.value} disabled={option.disabled}>
+              <option
+                key={option.value}
+                value={option.value}
+                disabled={option.disabled}
+              >
                 {option.text}
               </option>
             );
           })}
-          {/* <option value="currentlyReading" >Currently Reading</option>
-          <option value="wantToRead">Want to Read</option>
-          <option value="read">Read</option>
-          <option value="none">None</option> */}
         </select>
       </div>
     </div>
