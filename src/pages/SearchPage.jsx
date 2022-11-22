@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 
-import Book from "./Book";
+import Book from "../Book";
 
-import { search } from "./BooksAPI";
+import { search } from "../BooksAPI";
+
+// Context
+import useBooksContext from "../hooks/useBooksContext";
 
 export default function SearchPage(props) {
+  const {changeShelf} = useBooksContext();
   const [searchedBooks, setSearchedBooks] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [error, setError] = useState("");
@@ -56,7 +60,7 @@ export default function SearchPage(props) {
                 searchedBooks.map((book) => {
                   return (
                     <Book
-                      changeShelf={props.changeShelf}
+                      changeShelf={changeShelf}
                       book={book}
                       key={book.id}
                     />

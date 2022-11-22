@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 
+// Context
+import useBooksContext from "./hooks/useBooksContext";
+
 export default function ShelfChanger(props) {
   // console.log(props);
   const [bookShelf, setBookShelf] = useState("");
+  const { changeShelf } = useBooksContext();
 
   // Use useEffect hook to make sure this function call will be executed after the state is updated
   useEffect(() => {
-    props.changeShelf(props.book, bookShelf);
+    changeShelf(props.book, bookShelf);
   }, [bookShelf]);
 
   function handleChange(e) {

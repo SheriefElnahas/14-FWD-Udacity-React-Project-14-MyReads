@@ -1,53 +1,27 @@
+// CSS & React
 import "./App.css";
-
-import { Routes, Route, Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-import MyReads from "./MyReads";
-import SearchPage from "./SearchPage";
+// Router & Routes
+import { Routes, Route, Link } from "react-router-dom";
+import MyReads from "./pages/MyReads";
+import SearchPage from "./pages/SearchPage";
 
-const API = "https://reactnd-books-api.udacity.com/books";
-import { update, getAll } from "./BooksAPI";
+// Context
+import useBooksContext from "./hooks/useBooksContext";
 
 function App() {
-  const [initialBooks, setInitialBooks] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const {fetchBooks, books ,setBooks, isLoading} = useBooksContext();
 
   useEffect(() => {
-    const controller = new AbortController();
-    setIsLoading(true);
+    fetchBooks();
+  },[])
 
-    getAll(
-      API,
-      { headers: { Authorization: "Sherief Elnahas" } },
-      { signal: controller.signal }
-    ).then((response) => {
-      setInitialBooks(response);
-      setIsLoading(false);
-    });
 
-    return () => {
-      controller.abort();
-    };
-  }, []);
-
-  function changeShelf(book, moveTo) {
-    if (moveTo) {
-      const modifiedBooks = initialBooks.map((singleBook) => {
-        if (singleBook.title === book.title) {
-          book.shelf = moveTo;
-          return book;
-        }
-        return singleBook;
-      });
-      setInitialBooks(modifiedBooks);
-      update(book, moveTo);
-    }
-  }
 
   function getSearchedBooks(searchedBooks) {
     const modifiedBooks = searchedBooks.map((singleBook) => {
-      initialBooks.forEach((book) => {
+      books.forEach((book) => {
         if (book.title === singleBook.title) {
           singleBook.shelf = book.shelf;
         }
@@ -64,20 +38,8 @@ function App() {
         <h1>Loading...</h1>
       ) : (
         <Routes>
-          <Route
-            path="/"
-            element={<MyReads books={initialBooks} changeShelf={changeShelf} />}
-          />
-          <Route
-            path="/search"
-            element={
-              <SearchPage
-                changeShelf={changeShelf}
-                getSearchedBooks={getSearchedBooks}
-              />
-            }
-          />
-        </Routes>
+          <Route path="/"  element={<MyReads books={books}  />}/>
+          <Route path="/search" element={ <SearchPage  getSearchedBooks={getSearchedBooks}/> } />  </Routes>
       )}
 
       <div className="open-search">
