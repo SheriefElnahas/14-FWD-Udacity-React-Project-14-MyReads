@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 
-import Book from "../Book";
+import Book from "../components/Book";
 
-import { search } from "../BooksAPI";
+import { search } from "../api/BooksAPI";
 
 // Context
 import useBooksContext from "../hooks/useBooksContext";

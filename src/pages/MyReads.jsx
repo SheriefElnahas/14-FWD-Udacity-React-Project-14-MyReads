@@ -1,5 +1,5 @@
 import React from "react";
-import Shelf from "../Shelf";
+import Shelf from "../components/Shelf";
 
 export default function ({ books }) {
   return (

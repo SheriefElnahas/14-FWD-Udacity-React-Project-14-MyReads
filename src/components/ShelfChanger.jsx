@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // Context
-import useBooksContext from "./hooks/useBooksContext";
+import useBooksContext from "../hooks/useBooksContext";
 
 export default function ShelfChanger(props) {
   // console.log(props);
