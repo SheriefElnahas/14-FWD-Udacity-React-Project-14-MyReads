@@ -1,4 +1,4 @@
-const api = "https://reactnd-books-api.udacity.com";
+export const api = "https://reactnd-books-api.udacity.com";
 
 let token = localStorage.token;
 

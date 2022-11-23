@@ -1,6 +1,6 @@
 // CSS & React
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 // Router & Routes
 import { Routes, Route, Link } from "react-router-dom";
@@ -11,35 +11,21 @@ import SearchPage from "./pages/SearchPage";
 import useBooksContext from "./hooks/useBooksContext";
 
 function App() {
-  const {fetchBooks, books ,setBooks, isLoading} = useBooksContext();
+  const { fetchMyReadsBooks, myReadsBooks, myReadsLoading } = useBooksContext();
 
   useEffect(() => {
-    fetchBooks();
-  },[])
-
-
-
-  function getSearchedBooks(searchedBooks) {
-    const modifiedBooks = searchedBooks.map((singleBook) => {
-      books.forEach((book) => {
-        if (book.title === singleBook.title) {
-          singleBook.shelf = book.shelf;
-        }
-      });
-      return singleBook;
-    });
-    return modifiedBooks;
-    // I should update the existing search books results at this point ???!!
-  }
+    fetchMyReadsBooks();
+  }, []);
 
   return (
     <div className="app">
-      {isLoading ? (
+      {myReadsLoading ? (
         <h1>Loading...</h1>
       ) : (
         <Routes>
-          <Route path="/"  element={<MyReads books={books}  />}/>
-          <Route path="/search" element={ <SearchPage  getSearchedBooks={getSearchedBooks}/> } />  </Routes>
+          <Route path="/" element={<MyReads myReadsBooks={myReadsBooks} />} />
+          <Route path="/search" element={<SearchPage />} />
+        </Routes>
       )}
 
       <div className="open-search">

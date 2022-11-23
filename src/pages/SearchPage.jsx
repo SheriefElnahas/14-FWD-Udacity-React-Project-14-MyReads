@@ -11,51 +11,66 @@ import useBooksContext from "../hooks/useBooksContext";
 import useDebounce from "../hooks/useDebounce";
 
 export default function SearchPage(props) {
-  const { changeShelf } = useBooksContext();
-  const [searchedBooks, setSearchedBooks] = useState([]);
+  const { myReadsBooks } = useBooksContext();
+  const [booksFromSearch, setbooksFromSearch] = useState([]);
 
-  const [searchInput, setSearchInput] = useState("");
-  const debouncedSearch = useDebounce(searchInput, 500);
-
+  // Search Input & Debounce Hooks
   const [error, setError] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [compinedBooks, setCompinedBooks] = useState([]);
+  const debouncedSearch = useDebounce(searchInput, 300);
 
-  // async function handleSubmit(e) {
-  //   setError("");
-  //   e.preventDefault();
-  //   try {
-  //     const result = await search(searchInput);
-  //     if (result.error) {
-  //       throw new Error(result.error);
-  //     }
-  //     setSearchedBooks(result);
-  //   } catch (err) {
-  //     setError("There are no search results for this value");
-  //     setSearchInput("");
-  //   }
-  // }
-
-  const handleInputChange = async (e) => {
+  const handleInputChange = (e) => {
     setSearchInput(e.target.value);
   };
 
   useEffect(() => {
-    if (debouncedSearch) {
-      search(debouncedSearch).then((response) => {
-        console.log(response);
-        setSearchedBooks(response);
-      });
+    async function fetchData() {
+      try {
+        if (debouncedSearch) {
+          setError("");
+          const result = await search(debouncedSearch);
+
+          setbooksFromSearch(result);
+
+          if (result.error) {
+            throw new Error(result.error);
+          }
+        }
+      } catch (err) {
+        setError("There are no search results for this value");
+        setSearchInput("");
+      }
     }
+
+    if (debouncedSearch === "") {
+      setbooksFromSearch([]);
+    }
+
+    fetchData();
   }, [debouncedSearch]);
 
-  // I should update the searched books here!
-  // useEffect(() => {
-  //   const modifiedBooks = props.getSearchedBooks(searchedBooks);
-  //   //  setSearchedBooks(modifiedBooks);
-  // }, [searchedBooks]);
+  useEffect(() => {
+    if (booksFromSearch.length > 0) {
+      const compareBooks = () => {
+        const modifiedBooks = booksFromSearch.map((singleBook) => {
+          myReadsBooks.forEach((book) => {
+            if (book.title === singleBook.title) {
+              singleBook.shelf = book.shelf;
+            }
+            return book;
+          });
+          return singleBook;
+        });
+        return modifiedBooks;
+      };
+
+      setCompinedBooks(compareBooks());
+    }
+  }, [booksFromSearch]);
 
   return (
     <div className="SearchPage">
-      {/* <form onSubmit={handleSubmit} className="search-books"> */}
       <div className="search-books-bar">
         <Link className="close-search" to="/">
           Close
@@ -67,7 +82,6 @@ export default function SearchPage(props) {
             onChange={handleInputChange}
             value={searchInput}
           />
-          <button className="search-btn">Search</button>
 
           <p className="search-error">{error} </p>
         </div>
@@ -75,18 +89,20 @@ export default function SearchPage(props) {
       {!error ? (
         <div className="search-books-results">
           <ol className="books-grid">
-            {searchedBooks &&
-              searchedBooks.map((book) => {
-                return (
-                  <Book changeShelf={changeShelf} book={book} key={book.id} />
-                );
+            {booksFromSearch &&
+              booksFromSearch.map((book) => {
+                // book.shelf = 'none';
+                // console.log(book.shelf)
+                if (book.shelf === undefined) {
+                  book.shelf = "none";
+                }
+                return <Book book={book} key={book.id} />;
               })}
           </ol>
         </div>
       ) : (
         error
       )}
-      {/* </form> */}
     </div>
   );
 }

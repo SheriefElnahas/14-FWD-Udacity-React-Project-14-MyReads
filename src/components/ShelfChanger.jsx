@@ -3,21 +3,17 @@ import React, { useEffect, useState } from "react";
 // Context
 import useBooksContext from "../hooks/useBooksContext";
 
-export default function ShelfChanger(props) {
-  // console.log(props);
-  const [bookShelf, setBookShelf] = useState("");
+export default function ShelfChanger({ book }) {
+  const [selecedShelf, setSelectedShelf] = useState("");
   const { changeShelf } = useBooksContext();
 
-  // Use useEffect hook to make sure this function call will be executed after the state is updated
   useEffect(() => {
-    changeShelf(props.book, bookShelf);
-  }, [bookShelf]);
+    changeShelf(book, selecedShelf);
+  }, [selecedShelf]);
 
   function handleChange(e) {
     // Change the element to controled element
-    setBookShelf(e.target.value);
-
-    // console.log(props.book)
+    setSelectedShelf(e.target.value);
 
     // Extract the options array & the selected option index
     const options = e.target.options;
@@ -41,9 +37,9 @@ export default function ShelfChanger(props) {
   return (
     <div>
       <div className="book-shelf-changer">
-        <select value={bookShelf} onChange={handleChange}>
+        <select value={selecedShelf} onChange={handleChange}>
           {optionsArr.map((option) => {
-            if (option.value === props.shelf) {
+            if (option.value === book.shelf) {
               option.text += "✔️";
             }
             return (

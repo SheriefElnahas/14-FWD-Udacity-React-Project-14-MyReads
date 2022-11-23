@@ -94,23 +94,6 @@ body,
   display: flex;
 }
 
-.search-btn {
-  background: #4149b9;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: 1.15rem 4rem;
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  cursor: pointer;
-  border: none;
-}
-.search-btn:hover {
-  background: #333a9a;
-}
-
 .search-error {
   background: #000;
   text-align: center;
